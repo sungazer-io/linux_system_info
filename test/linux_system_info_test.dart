@@ -6,7 +6,7 @@ void main() {
 
   test('Check returned data', () {
     var cpu0_MHz = CpuInfo.getProcessors()[0].cpu_mhz;
-    expect(cpu0_MHz.runtimeType, equals(int));
+    expect(cpu0_MHz.runtimeType, equals(double));
 
     var total_mem = MemInfo().mem_total_gb;
     expect(total_mem.runtimeType, equals(int));
@@ -27,7 +27,7 @@ void main() {
     expect(os_version.runtimeType, equals(String));
 
     var os_release = SystemInfo().os_release;
-    expect(os_release.runtimeType, equals(Map));
+    expect(os_release.runtimeType, equals(<String, String>{}.runtimeType));
 
   });
 
