@@ -1,13 +1,22 @@
 import 'dart:io';
 import 'package:tuple/tuple.dart';
 
+
+/// Class for handling general system information
 class SystemInfo {
+
+  /// Current kernel name, e.g.: `Linux`
   String kernel_name = '';
+  /// Current kernel version, e.g.: `5.11.0-16-generic`
   String kernel_version = '';
+  /// Current os name, e.g.: `Ubuntu`
   String os_name = '';
+  /// Current os version, e.g.: `21.04`
   String os_version = '';
+  /// A parsing of `/etc/os-release` containing information like the distro codename and homepage
   Map<String, String> os_release = <String, String>{};
 
+  /// Empty constructor, this loads all the information from `/proc/version` and from `/etc/os-release`
   SystemInfo() {
     var content = File('/proc/version').readAsStringSync();
     kernel_name = content.split(' ')[0];
@@ -25,36 +34,63 @@ class SystemInfo {
 
 }
 
+/// Class containing CPU core data
 class Cpu {
+  /// Core number
   int processor = 0;
+  /// CPU vendor identifier
   String vendor_id = '';
+  /// CPU family
   int cpu_family = -1;
+  /// CPU model
   int model = -1;
+  /// CPU model name
   String model_name = '';
+  /// CPU stepping
   int stepping = -1;
+  /// CPU microcode
   int microcode = -1;
+  /// CPU MHz
   double cpu_mhz = -1.0;
+  /// CPU cache size
   String cache_size = '';
+  /// CPU physical id
   int physical_id = -1;
+  /// CPU siblings
   int siblings = -1;
+  /// CPU core identifier
   int core_id = -1;
+  /// Total amount of cores
   int cpu_cores = -1;
+  /// CPU apicid
   int apicid = -1;
+  /// CPU initial apicid
   int initial_apicid = -1;
+  /// If cpu has an FPU (Floating point unit)
   bool fpu = false;
+  /// If FPU has an exception
   bool fpu_exception = false;
+  /// Cpuid level
   int cpuid_level = -1;
   bool wp = false;
+  /// CPU's flags
   List<String> flags = [];
+  /// CPU bogomips
   double bogomips = -1.0;
+  /// CPU clflush's size
   int clflush_size = -1;
+  /// CPU cache alignment
   int cache_alignment = -1;
   Tuple2<String, String> address_sizes = Tuple2<String, String>('', '');
 
+
+  /// Constructor for creating a [Cpu] with data in it
   Cpu.fromData(this.processor, this.vendor_id, this.cpu_family, this.model, this.model_name, this.stepping, this.microcode, this.cpu_mhz, this.cache_size, this.physical_id, this.siblings, this.core_id, this.cpu_cores, this.apicid, this.initial_apicid, this.fpu, this.fpu_exception, this.cpuid_level, this.wp, this.flags, this.bogomips, this.clflush_size, this.cache_alignment, this.address_sizes);
 
+  /// Empty constructor, creates a [Cpu] object with default values in it
   Cpu();
 
+  /// Get current core load
   List<int> load() {
     var f = File('/proc/stat');
     var lines = f.readAsLinesSync();
@@ -72,6 +108,8 @@ class Cpu {
     return [idle, total];
   }
 
+
+  /// Get a [Stream] for handling the core usage in percentage as a [double]
   Stream<double> getCpuUsagePercentage() async* {
     var idleTotalPrev = <int>[0, 0];
     
@@ -90,24 +128,39 @@ class Cpu {
 
 }
 
+/// Class memory information
 class MemInfo {
 
+  /// Total RAM amount in Kb
   int mem_total = 0;
+  /// Total RAM amount in Mb
   int mem_total_mb = 0;
+  /// Total RAM amount in Gb
   int mem_total_gb = 0;
 
+
+  /// Free RAM amount in Kb
   int mem_free = 0;
+  /// Free RAM amount in Mb
   int mem_free_mb = 0;
+  /// Free RAM amount in Gb
   int mem_free_gb = 0;
 
+  /// Total Swap amount in Kb
   int swap_total = 0;
+  /// Total Swap amount in Mb
   int swap_total_mb = 0;
+  /// Total Swap amount in Gb
   int swap_total_gb = 0;
 
+  /// Free Swap amount in Kb
   int swap_free = 0;
+  /// Free Swap amount in Mb
   int swap_free_mb = 0;
+  /// Free Swap amount in Gb
   int swap_free_gb = 0;
 
+  /// Empty constructor, this loads all the information from `/proc/meminfo`
   MemInfo() {
 
     var lines = File('/proc/meminfo').readAsLinesSync();
@@ -153,8 +206,10 @@ class MemInfo {
 
 }
 
-
+/// Class containing CPU information
 class CpuInfo {
+
+  /// Get a [List] containing all cpu's cores in a [Cpu] class
   static List<Cpu> getProcessors() {
     var cpus = <Cpu>[];
     var curCpu = 0;
@@ -299,6 +354,7 @@ class CpuInfo {
     return cpus;
   }
 
+  /// Get total cpu load
   static List<int> load() {
     var f = File('/proc/stat');
     var lines = f.readAsLinesSync();
@@ -315,6 +371,7 @@ class CpuInfo {
     return [idle, total];
   }
 
+  /// Get a [Stream] for handling the total cpu usage in percentage as a [double]
   static Stream<double> getCpuUsagePercentage() async* {
     var idleTotalPrev = <int>[0, 0];
 
