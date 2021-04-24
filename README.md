@@ -1,6 +1,6 @@
 [![build](https://github.com/LolzDEV/linux_system_info/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/LolzDEV/linux_system_info/actions/workflows/build.yml)
 
-A library for Dart developers.
+A library for getting linux system information
 
 ## Usage
 
