@@ -1,23 +1,34 @@
 import 'package:linux_system_info/linux_system_info.dart';
+import 'package:test/expect.dart';
+import 'package:test/scaffolding.dart';
 
 void main() {
 
-  var cpu0_MHz = CpuInfo.getProcessors()[0].cpu_mhz;
+  test('Check returned data', () {
+    var cpu0_MHz = CpuInfo.getProcessors()[0].cpu_mhz;
+    expect(cpu0_MHz.runtimeType, equals(int));
 
-  var total_mem = MemInfo().mem_total_gb;
+    var total_mem = MemInfo().mem_total_gb;
+    expect(total_mem.runtimeType, equals(int));
 
-  var total_swap = MemInfo().swap_total_gb;
+    var total_swap = MemInfo().swap_total_gb;
+    expect(total_swap.runtimeType, equals(int));
 
-  var kernel_name = SystemInfo().kernel_name;
+    var kernel_name = SystemInfo().kernel_name;
+    expect(kernel_name.runtimeType, equals(String));
 
-  var kernel_version = SystemInfo().kernel_version;
+    var kernel_version = SystemInfo().kernel_version;
+    expect(kernel_version.runtimeType, equals(String));
 
-  var os_name = SystemInfo().os_name;
+    var os_name = SystemInfo().os_name;
+    expect(os_name.runtimeType, equals(String));
 
-  var os_version = SystemInfo().os_version;
+    var os_version = SystemInfo().os_version;
+    expect(os_version.runtimeType, equals(String));
 
-  var os_release = SystemInfo().os_release;
+    var os_release = SystemInfo().os_release;
+    expect(os_release.runtimeType, equals(Map));
 
-  print('Tested Data: $cpu0_MHz, $total_mem, $total_swap, $kernel_name, $kernel_version, $os_name, $os_version, $os_release');
+  });
 
 }
