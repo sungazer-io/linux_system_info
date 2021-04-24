@@ -1,3 +1,7 @@
+## 0.0.4
+
+- Formatted code with `dart format`
+
 ## 0.0.3
 
 - Added documentation comments

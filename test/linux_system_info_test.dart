@@ -3,7 +3,6 @@ import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void main() {
-
   test('Check returned data', () {
     var cpu0_MHz = CpuInfo.getProcessors()[0].cpu_mhz;
     expect(cpu0_MHz.runtimeType, equals(double));
@@ -28,7 +27,5 @@ void main() {
 
     var os_release = SystemInfo().os_release;
     expect(os_release.runtimeType, equals(<String, String>{}.runtimeType));
-
   });
-
 }
