@@ -1,5 +1,7 @@
 [![build](https://github.com/LolzDEV/linux_system_info/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/LolzDEV/linux_system_info/actions/workflows/build.yml)
-
+[![likes](https://badges.bar/linux_sytem_info/likes)](https://pub.dev/packages/linux_system_info/score)
+[![popularity](https://badges.bar/linux_sytem_info/popularity)](https://pub.dev/packages/linux_system_info/score)
+[![pub points](https://badges.bar/linux_system_info/pub%20points)]
 
 ## Linux System Info
 
