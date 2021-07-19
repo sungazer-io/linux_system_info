@@ -10,10 +10,10 @@ class SystemInfo {
   String kernel_version = '';
 
   /// Current os name, e.g.: `Ubuntu`
-  String os_name = '';
+  String? os_name = '';
 
   /// Current os version, e.g.: `21.04`
-  String os_version = '';
+  String? os_version = '';
 
   /// A parsing of `/etc/os-release` containing information like the distro codename and homepage
   Map<String, String> os_release = <String, String>{};
