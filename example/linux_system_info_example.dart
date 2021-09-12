@@ -1,6 +1,6 @@
 import 'package:linux_system_info/linux_system_info.dart';
 
-void main() {
+Future<void> main() async {
   //CPU
 
   var cpu_usage = CpuInfo
@@ -19,6 +19,11 @@ void main() {
 
   var total_swap = MemInfo()
       .swap_total_gb; // This returns the amount of SWAP in GB (you can also get it in kb or mb) e.g. 2
+
+  //GPU
+
+  var gpu_model = (await GpuInfo.load())[0]
+      .model; // This returns the model name of the GPU e.g. "Intel HD Graphics"
 
   //SYSTEM
 
