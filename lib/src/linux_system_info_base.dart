@@ -1,4 +1,7 @@
+import 'dart:ffi';
 import 'dart:io';
+import 'package:dbus/dbus.dart';
+import 'package:ffi/ffi.dart';
 import 'package:tuple/tuple.dart';
 
 /// Class for handling general system information
@@ -438,3 +441,91 @@ class CpuInfo {
     }
   }
 }
+
+class Gpu {
+  /// The model name of the GPU e.g. "Intel(R) HD Graphics"
+  String model = '';
+
+  Gpu(this.model);
+}
+
+/// GPU information
+class GpuInfo {
+  /// Fetches GPU information from:
+  /// - `net.hadess.SwitcherooControl.GPUs` (D-Bus)
+  /// - `org.gnome.SessionManager.Renderer` (D-Bus)
+  /// - `GL_RENDERER` (OpenGL)
+  static Future<List<Gpu>> load() async {
+    final gpus = await _getSwitcherooGpus() ??
+        await _getGnomeRenderer() ??
+        await _getGlRenderer();
+    return gpus?.map((gpu) => Gpu(gpu)).toList() ?? [];
+  }
+
+  static Future<DBusValue?> _getDBusProperty({
+    required DBusClient client,
+    required String interface,
+    required String path,
+    required String property,
+  }) async {
+    try {
+      final object = DBusRemoteObject(
+        client,
+        name: interface,
+        path: DBusObjectPath(path),
+      );
+      final value = await object.getProperty(interface, property);
+      await client.close();
+      return value;
+    } on DBusErrorException catch (_) {
+      return null;
+    }
+  }
+
+  static Future<Iterable<String>?> _getSwitcherooGpus() async {
+    final value = await _getDBusProperty(
+      client: DBusClient.system(),
+      interface: 'net.hadess.SwitcherooControl',
+      path: '/net/hadess/SwitcherooControl',
+      property: 'GPUs',
+    );
+    if (value == null) return null;
+
+    final gpus =
+        (value as DBusArray).children.map((child) => child.toNative()).toList();
+    gpus.sort((a, b) {
+      if (a['Default'] == true) return 1;
+      if (b['Default'] == true) return -1;
+      return 0;
+    });
+    return gpus.map((gpu) => gpu['Name'] as String);
+  }
+
+  static Future<Iterable<String>?> _getGnomeRenderer() async {
+    final value = await _getDBusProperty(
+      client: DBusClient.system(),
+      interface: 'org.gnome.SessionManager',
+      path: '/org/gnome/SessionManager',
+      property: 'Renderer',
+    );
+    if (value == null) return null;
+    return <String>[(value as DBusString).value];
+  }
+
+  static Future<Iterable<String>?> _getGlRenderer() async {
+    try {
+      final lib = DynamicLibrary.open('libGL.so.1');
+      final glGetString =
+          lib.lookupFunction<_GlGetStringC, _GlGetStringDart>('glGetString');
+      const GL_RENDERER = 0x1F01;
+      final cstr = glGetString(GL_RENDERER);
+      if (cstr == nullptr) return null;
+      return <String>[cstr.cast<Utf8>().toDartString()];
+    } on ArgumentError catch (_) {
+      return null;
+    }
+  }
+}
+
+typedef _GlGetStringC = Pointer<Uint8> Function(Uint32 name);
+typedef _GlGetStringDart = Pointer<Uint8> Function(int name);
