@@ -2,7 +2,10 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:dbus/dbus.dart';
 import 'package:ffi/ffi.dart';
+import 'package:path/path.dart' as p;
 import 'package:tuple/tuple.dart';
+import 'package:xdg_directories/xdg_directories.dart' as xdg;
+import 'package:xml/xml.dart';
 
 /// Class for handling general system information
 class SystemInfo {
@@ -529,3 +532,53 @@ class GpuInfo {
 
 typedef _GlGetStringC = Pointer<Uint8> Function(Uint32 name);
 typedef _GlGetStringDart = Pointer<Uint8> Function(int name);
+
+class GnomeInfo {
+  GnomeInfo._([this.version = '', this.distributor = '']);
+
+  final String version;
+  final String distributor;
+
+  static GnomeInfo? _instance;
+
+  factory GnomeInfo() {
+    _instance ??= _init();
+    return _instance!;
+  }
+
+  static GnomeInfo _init() {
+    final file = _findDataFile('gnome/gnome-version.xml');
+    if (file == null) return GnomeInfo._('', '');
+    final xml = file.readAsStringSync();
+    return _parseGnomeVersion(xml);
+  }
+
+  static GnomeInfo _parseGnomeVersion(String xml) {
+    final doc = XmlDocument.parse(xml);
+
+    final elements = <String, String>{
+      for (final element in doc.rootElement.childElements)
+        element.name.toString(): element.text,
+    };
+
+    final version = [
+      elements['platform'],
+      elements['minor'],
+      elements['micro'],
+    ].join('.');
+
+    final distro = elements['distributor'];
+
+    return GnomeInfo._(version, distro ?? '');
+  }
+
+  static File? _findDataFile(String path) {
+    for (final dir in xdg.dataDirs) {
+      final file = File(p.join(dir.path, path));
+      if (file.existsSync()) {
+        return file;
+      }
+    }
+    return null;
+  }
+}

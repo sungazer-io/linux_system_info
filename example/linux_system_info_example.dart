@@ -41,4 +41,10 @@ Future<void> main() async {
   var os_release = SystemInfo()
       .os_release; // This value is a Map containing a parsed version of /etc/os-release
 
+  //GNOME
+  var gnome_version =
+      GnomeInfo().version; // This returns the Gnome version; e.g. '3.38.5'
+
+  var gnome_distributor = GnomeInfo()
+      .distributor; // This returns the Gnome distributor; e.g. 'Ubuntu'
 }
