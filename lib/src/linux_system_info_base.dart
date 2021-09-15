@@ -561,11 +561,11 @@ class GnomeInfo {
         element.name.toString(): element.text,
     };
 
-    final version = [
+    final version = <String?>[
       elements['platform'],
       elements['minor'],
       elements['micro'],
-    ].join('.');
+    ].takeWhile((v) => v != null).join('.');
 
     final distro = elements['distributor'];
 
