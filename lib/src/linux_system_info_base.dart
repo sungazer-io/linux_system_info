@@ -548,7 +548,7 @@ class GnomeInfo {
 
   static GnomeInfo _init() {
     final file = _findDataFile('gnome/gnome-version.xml');
-    if (file == null) return GnomeInfo._('', '');
+    if (file == null) return GnomeInfo._();
     final xml = file.readAsStringSync();
     return _parseGnomeVersion(xml);
   }
