@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Added GnomeInfo and GPUInfo
+
 ## 0.0.4
 
 - Formatted code with `dart format`
