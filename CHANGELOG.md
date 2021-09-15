@@ -1,6 +1,14 @@
-## 0.0.5
+## 0.0.7
 
 - Added GnomeInfo and GPUInfo
+
+## 0.0.6
+
+- Minor fixes
+
+## 0.0.5
+
+- Moved to null safety
 
 ## 0.0.4
 

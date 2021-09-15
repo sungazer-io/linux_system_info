@@ -1,6 +1,6 @@
 name: linux_system_info
 description: Dart library for getting general linux system information like amount of ram or swap, cpu's MHz, cpu usage and kernel/distribution related data
-version: 0.0.5
+version: 0.0.7
 homepage: https://github.com/LolzDEV/linux_system_info
 
 environment:
